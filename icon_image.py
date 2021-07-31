@@ -1,8 +1,8 @@
 from icon_font_to_png.icon_font import IconFont
 import os
 from PIL import Image
-import numpy as np
 import fire
+import numpy as np
 
 
 def gen_icon(
@@ -10,9 +10,11 @@ def gen_icon(
     icon_size: int = 500,
     icon_dir: str = ".temp",
     icon_color: str = "#7b7568",
+    bg_noise: bool = True,
     bg_color: tuple[int] = (255, 255, 255, 255),
     bg_width: int = 600,
     bg_height: int = 600,
+    seed: int = 42,
     pro_icon_path: str = None,
     pro_css_path: str = None,
 ):
@@ -44,11 +46,17 @@ def gen_icon(
     )
 
     icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
-    icon_mask = Image.new("RGBA", (bg_width, bg_height), bg_color)
+    if bg_noise:
+        if seed:
+            np.random.seed(seed)
+        noise = np.uint8(np.random.rand(bg_width, bg_height) * 255)
+        icon_bg = Image.fromarray(np.stack([noise, noise, noise], axis=2))
+    else:
+        icon_bg = Image.new("RGBA", (bg_width, bg_height), bg_color)
     offset = ((bg_width - icon_size) // 2, (bg_height - icon_size) // 2)
-    icon_mask.paste(icon_img, offset, icon_img)
+    icon_bg.paste(icon_img, offset, icon_img)
 
-    icon_mask.save("icon.png")
+    icon_bg.save("icon.png")
 
 
 def cli(**kwargs):
