@@ -1,15 +1,18 @@
 from icon_font_to_png.icon_font import IconFont
 import os
 from PIL import Image
-from matplotlib.colors import to_rgb
 import numpy as np
 import fire
 
 
 def gen_icon(
     icon_name: str = "fas fa-robot",
-    size: int = 600,
+    icon_size: int = 500,
     icon_dir: str = ".temp",
+    icon_color: str = "gray",
+    bg_color: tuple[int] = (255, 255, 255, 255),
+    bg_width: int = 600,
+    bg_height: int = 600,
     pro_icon_path: str = None,
     pro_css_path: str = None,
 ):
@@ -32,27 +35,20 @@ def gen_icon(
 
     icon = IconFont(css_file=css_path, ttf_file=ttf_path)
 
-    # If a length and width are provided, make icon the smaller of the two
-    if isinstance(size, tuple):
-        size = min(size)
-
     icon.export_icon(
         icon=icon_name_raw[len(icon.common_prefix) :],
-        size=size,
-        filename="icon.png",
+        size=icon_size,
+        color=icon_color,
+        filename="icon.temp.png",
         export_dir=icon_dir,
     )
 
+    icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+    icon_mask = Image.new("RGBA", (bg_width, bg_height), bg_color)
+    offset = ((bg_width - icon_size) // 2, (bg_height - icon_size) // 2)
+    icon_mask.paste(icon_img, offset, icon_img)
 
-def color_to_rgb(color):
-    """Converts a color to a RGB tuple from (0-255)."""
-    if isinstance(color, tuple):
-        # if a RGB tuple already
-        return color
-    else:
-        # to_rgb() returns colors from (0-1)
-        color = tuple(int(x * 255) for x in to_rgb(color))
-        return color
+    icon_mask.save("icon.png")
 
 
 def cli(**kwargs):
