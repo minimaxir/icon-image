@@ -1,5 +1,4 @@
 from icon_font_to_png.icon_font import IconFont
-import csv
 import os
 from PIL import Image
 from matplotlib.colors import to_rgb
@@ -7,9 +6,9 @@ import numpy as np
 import fire
 
 
-def gen_fa_mask(
-    icon_name: str = "fas fa-grin",
-    size: int = 512,
+def gen_icon(
+    icon_name: str = "fas fa-robot",
+    size: int = 600,
     icon_dir: str = ".temp",
     pro_icon_path: str = None,
     pro_css_path: str = None,
@@ -28,8 +27,8 @@ def gen_fa_mask(
     icon_prefix = icon_name.split(" ")[0]
     icon_name_raw = icon_name.split(" ")[1]
 
-    css_path = pro_css_path or os.path.join(STATIC_PATH, "fontawesome.min.css")
-    ttf_path = pro_icon_path or os.path.join(STATIC_PATH, font_files[icon_prefix])
+    css_path = pro_css_path or "fontawesome.min.css"
+    ttf_path = pro_icon_path or font_files[icon_prefix]
 
     icon = IconFont(css_file=css_path, ttf_file=ttf_path)
 
@@ -56,112 +55,10 @@ def color_to_rgb(color):
         return color
 
 
-def gen_stylecloud(
-    text: str = None,
-    file_path: str = None,
-    size: int = 512,
-    icon_name: str = "fas fa-flag",
-    palette: str = "cartocolors.qualitative.Bold_5",
-    colors: Union[str, List[str]] = None,
-    background_color: str = "white",
-    max_font_size: int = 200,
-    max_words: int = 2000,
-    stopwords: bool = True,
-    custom_stopwords: Union[List[str], set] = STOPWORDS,
-    add_stopwords: bool = False,
-    icon_dir: str = ".temp",
-    output_name: str = "stylecloud.png",
-    gradient: str = None,
-    font_path: str = os.path.join(STATIC_PATH, "Staatliches-Regular.ttf"),
-    random_state: int = None,
-    collocations: bool = True,
-    invert_mask: bool = False,
-    pro_icon_path: str = None,
-    pro_css_path: str = None,
-):
-    """Generates a stylecloud!
-    :param text: Input text. Best used if calling the function directly.
-    :param file_path: File path of the input text/CSV. Best used on the CLI.
-    :param size: Size (length and width in pixels) of the stylecloud.
-    :param icon_name: Icon Name for the stylecloud shape. (e.g. 'fas fa-grin')
-    :param palette: Color palette (via palettable)
-    :param colors: Custom color(s) for text (name or hex). Overrides palette.
-    :param background_color: Background color (name or hex).
-    :param max_font_size: Maximum font size in the stylecloud.
-    :param max_words: Maximum number of words to include in the stylecloud.
-    :param stopwords: Boolean to filter out common stopwords.
-    :param custom_stopwords: list of custom stopwords.
-    :param add_stopwords: Whether to use custom_stopwords to add to default
-    :param icon_dir: Temp directory to store the icon mask image.
-    :param output_name: Output file name of the stylecloud.
-    :param gradient: Direction of gradient. (if not None, will use gradient)
-    :param font_path: Path to .ttf file for font to use in stylecloud.
-    :param random_state: Controls random state of words and colors.
-    :param collocations: Whether to include collocations (bigrams) of two words.
-    :param invert_mask: Whether to invert the icon mask.
-    :param pro_icon_path: Path to Font Awesome Pro .ttf file if using FA Pro.
-    :param pro_css_path: Path to Font Awesome Pro .css file if using FA Pro.
-    """
-
-    assert any([text, file_path]), "Either text or file_path must be specified."
-
-    if file_path:
-        text = file_to_text(file_path)
-
-    gen_fa_mask(icon_name, size, icon_dir, pro_icon_path, pro_css_path)
-
-    if gradient and colors is None:
-        pal_colors, mask_array = gen_gradient_mask(
-            size, palette, icon_dir, gradient, invert_mask
-        )
-    else:  # Color each word randomly from the palette
-        mask_array = gen_mask_array(icon_dir, invert_mask, size)
-        if colors:
-            # if specifying a single color string
-            if isinstance(colors, str):
-                colors = [colors]
-
-            # iterate through each color to ensure correct RGB format.
-            # see matplotlib docs on how colors are decoded:
-            # https://matplotlib.org/3.1.1/api/colors_api.html
-            colors = [color_to_rgb(color) for color in colors]
-
-        else:
-            palette_func = gen_palette(palette)
-            colors = palette_func.colors
-
-        def pal_colors(word, font_size, position, orientation, random_state, **kwargs):
-            rand_color = np.random.randint(0, len(colors))
-            return tuple(colors[rand_color])
-
-    if add_stopwords:
-        custom_stopwords.extend(STOPWORDS)
-
-    # cleanup icon folder
-    rmtree(icon_dir)
-
-    wc = WordCloud(
-        background_color=background_color,
-        font_path=font_path,
-        max_words=max_words,
-        mask=mask_array,
-        stopwords=custom_stopwords if stopwords else None,
-        max_font_size=max_font_size,
-        random_state=random_state,
-        collocations=collocations,
-    )
-
-    # generate word cloud
-    if isinstance(text, str):
-        wc.generate_from_text(text)
-    else:  # i.e. a dict of word:value from a CSV
-        if stopwords:  # manually remove stopwords since otherwise ignored
-            text = {k: v for k, v in text.items() if k not in custom_stopwords}
-        wc.generate_from_frequencies(text)
-    wc.recolor(color_func=pal_colors, random_state=random_state)
-    wc.to_file(output_name)
-
-
-def stylecloud_cli(**kwargs):
+def cli(**kwargs):
     """Entrypoint for the stylecloud CLI."""
-    fire.Fire(gen_stylecloud)
+    fire.Fire(gen_icon)
+
+
+if __name__ == "__main__":
+    cli()
