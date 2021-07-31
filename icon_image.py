@@ -9,7 +9,7 @@ def gen_icon(
     icon_name: str = "fas fa-robot",
     icon_size: int = 500,
     icon_dir: str = ".temp",
-    icon_color: str = "gray",
+    icon_color: str = "#7b7568",
     bg_color: tuple[int] = (255, 255, 255, 255),
     bg_width: int = 600,
     bg_height: int = 600,
