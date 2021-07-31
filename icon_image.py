@@ -11,6 +11,7 @@ def gen_icon(
     icon_dir: str = ".temp",
     icon_color: str = "#7b7568",
     bg_noise: bool = True,
+    bg_noise_opacity: float = 0.2,
     bg_color: tuple[int] = (255, 255, 255, 255),
     bg_width: int = 600,
     bg_height: int = 600,
@@ -46,13 +47,25 @@ def gen_icon(
     )
 
     icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+    icon_bg = Image.new("RGBA", (bg_width, bg_height), bg_color)
     if bg_noise:
         if seed:
             np.random.seed(seed)
         noise = np.uint8(np.random.rand(bg_width, bg_height) * 255)
-        icon_bg = Image.fromarray(np.stack([noise, noise, noise], axis=2))
-    else:
-        icon_bg = Image.new("RGBA", (bg_width, bg_height), bg_color)
+        noise_array = np.stack(
+            [
+                noise,
+                noise,
+                noise,
+                np.uint8(np.full((bg_width, bg_height), 255 * bg_noise_opacity)),
+            ],
+            axis=2,
+        )
+        noise_img = Image.fromarray(
+            noise_array,
+            mode="RGBA",
+        )
+        icon_bg = Image.alpha_composite(icon_bg, noise_img)
     offset = ((bg_width - icon_size) // 2, (bg_height - icon_size) // 2)
     icon_bg.paste(icon_img, offset, icon_img)
 
