@@ -1,0 +1,4 @@
+Pillow
+numpy
+fire
+icon_font_to_png
