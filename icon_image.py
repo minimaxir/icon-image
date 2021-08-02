@@ -15,6 +15,10 @@ def gen_icon(
     bg_color: tuple[int] = (255, 255, 255, 255),
     bg_width: int = 600,
     bg_height: int = 600,
+    align_left: bool = False,
+    align_right: bool = False,
+    align_top: bool = False,
+    align_bottom: bool = False,
     seed: int = 42,
     pro_icon_path: str = None,
     pro_css_path: str = None,
@@ -51,13 +55,13 @@ def gen_icon(
     if bg_noise:
         if seed:
             np.random.seed(seed)
-        noise = np.uint8(np.random.rand(bg_width, bg_height) * 255)
+        noise = np.uint8(np.random.rand(bg_height, bg_width) * 255)
         noise_array = np.stack(
             [
                 noise,
                 noise,
                 noise,
-                np.uint8(np.full((bg_width, bg_height), 255 * bg_noise_opacity)),
+                np.uint8(np.full((bg_height, bg_width), 255 * bg_noise_opacity)),
             ],
             axis=2,
         )
@@ -66,9 +70,20 @@ def gen_icon(
             mode="RGBA",
         )
         icon_bg = Image.alpha_composite(icon_bg, noise_img)
-    offset = ((bg_width - icon_size) // 2, (bg_height - icon_size) // 2)
-    icon_bg.paste(icon_img, offset, icon_img)
 
+    left_offset = (bg_width - icon_size) // 2
+    if align_left:
+        left_offset = 0
+    if align_right:
+        left_offset = bg_width - icon_size
+
+    top_offset = (bg_height - icon_size) // 2
+    if align_top:
+        top_offset = 0
+    if align_bottom:
+        top_offset = bg_height - icon_size
+
+    icon_bg.paste(icon_img, (left_offset, top_offset), icon_img)
     icon_bg.save("icon.png")
 
 
