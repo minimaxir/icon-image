@@ -36,6 +36,14 @@ python3 icon_image.py --icon_name "fab fa-facebook-f" --bg_color white --icon_co
 
 ![](demo2.png)
 
+If you want to create a rectangular image with an icon aligned right, you can do:
+
+```sh
+python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 480 --bg_height 360 --icon_size 300 --align_right
+```
+
+![](demo3.png)
+
 ### CLI Arguments
 
 - icon_name: The Font Awesome icon name, including the `fa-` prefix. (e.g. `fab fa-apple`)
@@ -47,13 +55,17 @@ python3 icon_image.py --icon_name "fab fa-facebook-f" --bg_color white --icon_co
 - bg_height: Height of the final image (default: `600`)
 - icon_size: Size of the icon within the final image, which should be slightly smaller than the background. (default: `500`)
 - seed: Seed for random noise generation. (default: `42`)
+- align_left: Align the icon to the left. (default: `False`)
+- align_right: Align the icon to the right. (default: `False`)
+- align_top: Align the icon to the top. (default: `False`)
+- align_bottom: Align the icon to the bottom. (default: `False`)
 
 ## Helpful Notes
 
 - The default parameters of 600px for the image and 500px for the icon are chosen to be the largest compatible with the default parameters of the VQGAN + CLIP Colab Notebook without going OOM.
 - When using it as a initial/target in the VQGAN + CLIP Colab Notebook, it's help to set background and icon colors to be similar to what you want in the final result.
 - The use of the background noise _theoetically_ helps VQGAN + CLIP differentiate between the icon and the background, but experimentation will always be useful.
-- The default icon color, `"#7b7568"`, roughly corresponds to the RGB color of the mean ImageNet image, which the VQGAN + CLIP Colab Notebook normalizes.
+- The default icon color, `#7b7568`, roughly corresponds to the RGB color of the mean ImageNet image, which the VQGAN + CLIP Colab Notebook normalizes.
 
 ## Maintainer/Creator
 
