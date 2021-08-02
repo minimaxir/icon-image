@@ -2,6 +2,8 @@
 
 Python script to quickly generate a [Font Awesome](https://fontawesome.com/) icon imposed on a background, mostly intended to be used to steer the usage of a VQGAN + CLIP model generation, such as with this [Colab Notebook](https://colab.research.google.com/drive/1Foi0mCSE6NrW9oI3Fhni7158Krz4ZXdH?usp=sharing).
 
+Inspired by Mark Ridel's [attempt at controlling figure placement](https://twitter.com/mark_riedl/status/1421282588791132161) for VQGAN + CLIP.
+
 ## Installation
 
 You can the dependences via:
