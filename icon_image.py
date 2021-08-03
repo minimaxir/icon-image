@@ -12,7 +12,7 @@ def gen_icon(
     icon_color: str = "#7b7568",
     bg_noise: bool = True,
     bg_noise_opacity: float = 0.2,
-    bg_color: tuple[int] = (255, 255, 255, 255),
+    bg_color: str = "white",
     bg_width: int = 600,
     bg_height: int = 600,
     align_left: bool = False,
@@ -20,8 +20,8 @@ def gen_icon(
     align_top: bool = False,
     align_bottom: bool = False,
     seed: int = 42,
-    pro_icon_path: str = "",
-    pro_css_path: str = "",
+    pro_icon_path: str = None,
+    pro_css_path: str = None,
 ):
     """
     Generates a Font Awesome icon mask from the given FA prefix + name.
