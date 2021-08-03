@@ -20,8 +20,8 @@ def gen_icon(
     align_top: bool = False,
     align_bottom: bool = False,
     seed: int = 42,
-    pro_icon_path: str = None,
-    pro_css_path: str = None,
+    pro_icon_path: str = "",
+    pro_css_path: str = "",
 ):
     """
     Generates a Font Awesome icon mask from the given FA prefix + name.
