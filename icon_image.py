@@ -16,10 +16,7 @@ def gen_icon(
     bg_color: str = "white",
     bg_width: int = 600,
     bg_height: int = 600,
-    align_left: bool = False,
-    align_right: bool = False,
-    align_top: bool = False,
-    align_bottom: bool = False,
+    align: str = "center",
     seed: int = 42,
     pro_icon_path: str = None,
     pro_css_path: str = None,
@@ -27,6 +24,8 @@ def gen_icon(
     """
     Generates a Font Awesome icon mask from the given FA prefix + name.
     """
+
+    assert align in ["center", "left", "right", "top", "bottom"], "Invalid align value."
 
     # FA prefixes which map to a font file.
     font_files = {
@@ -79,15 +78,15 @@ def gen_icon(
         icon_bg = Image.alpha_composite(icon_bg, noise_img)
 
     left_offset = (bg_width - icon_size) // 2
-    if align_left:
+    if align == "left":
         left_offset = 0
-    if align_right:
+    if align == "right":
         left_offset = bg_width - icon_size
 
     top_offset = (bg_height - icon_size) // 2
-    if align_top:
+    if align == "top":
         top_offset = 0
-    if align_bottom:
+    if align == "bottom":
         top_offset = bg_height - icon_size
 
     icon_bg.paste(icon_img, (left_offset, top_offset), icon_img)

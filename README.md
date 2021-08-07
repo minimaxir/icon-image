@@ -56,10 +56,7 @@ python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 
 - bg_height: Height of the final image (default: `600`)
 - icon_size: Size of the icon within the final image, which should be slightly smaller than the background. (default: `500`)
 - seed: Seed for random noise generation. (default: `42`)
-- align_left: Align the icon to the left. (default: `False`)
-- align_right: Align the icon to the right. (default: `False`)
-- align_top: Align the icon to the top. (default: `False`)
-- align_bottom: Align the icon to the bottom. (default: `False`)
+- align: Alignment for the icon within the final image. (default: `center`: valid values are `center`, `left`, `right`, `top`, 'bottom`)
 
 ## Helpful Notes
 
