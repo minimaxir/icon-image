@@ -10,6 +10,7 @@ def gen_icon(
     icon_size: int = 500,
     icon_dir: str = ".temp",
     icon_color: str = "#7b7568",
+    icon_opacity: float = 1.0,
     bg_noise: bool = True,
     bg_noise_opacity: float = 0.2,
     bg_color: str = "white",
@@ -51,6 +52,12 @@ def gen_icon(
     )
 
     icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+    if icon_opacity < 1.0:
+        icon_img = Image.blend(
+            Image.new("RGBA", (icon_size, icon_size), (0, 0, 0, 0)),
+            icon_img,
+            icon_opacity,
+        )
     icon_bg = Image.new("RGBA", (bg_width, bg_height), bg_color)
     if bg_noise:
         if seed:
