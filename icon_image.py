@@ -28,29 +28,6 @@ def gen_icon(
 
     assert align in ["center", "left", "right", "top", "bottom"], "Invalid align value."
 
-    # FA prefixes which map to a font file.
-    font_files = {
-        "fas": "fa-solid-900.ttf",
-        "far": "fa-regular-400.ttf",
-        "fab": "fa-brands-400.ttf",
-    }
-
-    icon_prefix = icon_name.split(" ")[0]
-    icon_name_raw = icon_name.split(" ")[1]
-
-    css_path = pro_css_path or "fontawesome.min.css"
-    ttf_path = pro_icon_path or font_files[icon_prefix]
-
-    icon = IconFont(css_file=css_path, ttf_file=ttf_path)
-
-    icon.export_icon(
-        icon=icon_name_raw[len(icon.common_prefix) :],
-        size=icon_size,
-        color=icon_color,
-        filename="icon.temp.png",
-        export_dir=icon_dir,
-    )
-
     if sketch_path:
         icon_img = Image.open(sketch_path).convert("RGBA")
         icon_img = icon_img.resize((icon_size, icon_size), Image.ANTIALIAS)
@@ -65,6 +42,28 @@ def gen_icon(
                 if sketch_array[x, y] >= 250:
                     pixdata[x, y] = (255, 255, 255, 0)
     else:
+        # FA prefixes which map to a font file.
+        font_files = {
+            "fas": "fa-solid-900.ttf",
+            "far": "fa-regular-400.ttf",
+            "fab": "fa-brands-400.ttf",
+        }
+
+        icon_prefix = icon_name.split(" ")[0]
+        icon_name_raw = icon_name.split(" ")[1]
+
+        css_path = pro_css_path or "fontawesome.min.css"
+        ttf_path = pro_icon_path or font_files[icon_prefix]
+
+        icon = IconFont(css_file=css_path, ttf_file=ttf_path)
+
+        icon.export_icon(
+            icon=icon_name_raw[len(icon.common_prefix) :],
+            size=icon_size,
+            color=icon_color,
+            filename="icon.temp.png",
+            export_dir=icon_dir,
+        )
         icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
     if icon_opacity < 1.0:
         icon_img = Image.blend(
