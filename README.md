@@ -47,6 +47,7 @@ python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 
 ### CLI Arguments
 
 - icon_name: The Font Awesome icon name, including the `fa-` prefix. (e.g. `fab fa-apple`)
+- sketch_path: Takes a sketch on a pure white background as input and composites it onto the noise, with the white background made transparent. If specified, this behavior replaces the icon generation.
 - bg_color: Background color, in text or hex.
 - icon_color: Icon color, in text or hex.
 - bg_noise: Whether to add uniform noise to the background. (default: `True`)

@@ -11,6 +11,7 @@ def gen_icon(
     icon_dir: str = ".temp",
     icon_color: str = "#7b7568",
     icon_opacity: float = 1.0,
+    sketch_path: str = None,
     bg_noise: bool = True,
     bg_noise_opacity: float = 0.2,
     bg_color: str = "white",
@@ -50,7 +51,21 @@ def gen_icon(
         export_dir=icon_dir,
     )
 
-    icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+    if sketch_path:
+        icon_img = Image.open(sketch_path).convert("RGBA")
+        icon_img = icon_img.resize((icon_size, icon_size), Image.ANTIALIAS)
+
+        sketch_array = np.asarray(icon_img.convert("L")).T
+
+        # https://stackoverflow.com/a/765829
+        pixdata = icon_img.load()
+        width, height = icon_img.size
+        for y in range(height):
+            for x in range(width):
+                if sketch_array[x, y] >= 250:
+                    pixdata[x, y] = (255, 255, 255, 0)
+    else:
+        icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
     if icon_opacity < 1.0:
         icon_img = Image.blend(
             Image.new("RGBA", (icon_size, icon_size), (0, 0, 0, 0)),
