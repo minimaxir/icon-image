@@ -13,6 +13,7 @@ def gen_icon(
     icon_opacity: float = 1.0,
     sketch_path: str = None,
     bg_noise: bool = True,
+    rainbow_noise: bool = False,
     bg_noise_opacity: float = 0.2,
     bg_color: str = "white",
     bg_width: int = 600,
@@ -75,16 +76,27 @@ def gen_icon(
     if bg_noise:
         if seed:
             np.random.seed(seed)
-        noise = np.uint8(np.random.rand(bg_height, bg_width) * 255)
-        noise_array = np.stack(
-            [
-                noise,
-                noise,
-                noise,
-                np.uint8(np.full((bg_height, bg_width), 255 * bg_noise_opacity)),
-            ],
-            axis=2,
-        )
+        if rainbow_noise:
+            noise_array = np.stack(
+                [
+                    np.uint8(np.random.rand(bg_height, bg_width) * 255),
+                    np.uint8(np.random.rand(bg_height, bg_width) * 255),
+                    np.uint8(np.random.rand(bg_height, bg_width) * 255),
+                    np.uint8(np.full((bg_height, bg_width), 255 * bg_noise_opacity)),
+                ],
+                axis=2,
+            )
+        else:
+            noise = np.uint8(np.random.rand(bg_height, bg_width) * 255)
+            noise_array = np.stack(
+                [
+                    noise,
+                    noise,
+                    noise,
+                    np.uint8(np.full((bg_height, bg_width), 255 * bg_noise_opacity)),
+                ],
+                axis=2,
+            )
         noise_img = Image.fromarray(
             noise_array,
             mode="RGBA",

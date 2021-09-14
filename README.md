@@ -52,6 +52,7 @@ python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 
 - icon_color: Icon color, in text or hex.
 - bg_noise: Whether to add uniform noise to the background. (default: `True`)
 - bg_noise_opacity: The strength of the noise, in range [0, 1]. (default: `0.2`)
+- rainbow_noise: Whether the noise should be rainbow, vs. black-and-white. If enabled, you should increase bg_noise_opacity (default: `False`)
 - icon_opacity: The opacity of the icon from [0, 1]. (default: `1.0` / no transparency)
 - bg_width: Width of the final image (default: `600`)
 - bg_height: Height of the final image (default: `600`)
