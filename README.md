@@ -39,7 +39,7 @@ python3 icon_image.py --icon_name "fab fa-facebook-f" --bg_color white --icon_co
 If you want to create a rectangular image with an icon aligned right, you can do:
 
 ```sh
-python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 480 --bg_height 360 --icon_size 300 --align_right
+python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 480 --bg_height 360 --icon_size 300 --align "right"
 ```
 
 ![](demo3.png)
@@ -56,9 +56,11 @@ python3 icon_image.py --icon_name "fas fa-male" --bg_color "#34ebeb" --bg_width 
 - icon_opacity: The opacity of the icon from [0, 1]. (default: `1.0` / no transparency)
 - bg_width: Width of the final image (default: `600`)
 - bg_height: Height of the final image (default: `600`)
-- icon_size: Size of the icon within the final image, which should be slightly smaller than the background. (default: `500`)
+- icon_size: Size of the icon within the final image (and the size the base icon is rendered at) (default: `500`)
+- icon_width: Width of the icon in the final image; uses `icon_size` if not specified (default: `None`)
+- icon_height: Height of the icon in the final image; uses `icon_size` if not specified (default: `None`)
 - seed: Seed for random noise generation. (default: `42`)
-- align: Alignment for the icon within the final image. (default: `center`: valid values are `center`, `left`, `right`, `top`, 'bottom`)
+- align: Alignment for the icon within the final image. (default: `center`: valid values are `center`, `left`, `right`, `top`, `bottom`)
 
 ## Helpful Notes
 

@@ -8,6 +8,8 @@ import numpy as np
 def gen_icon(
     icon_name: str = "fas fa-robot",
     icon_size: int = 500,
+    icon_width: int = None,
+    icon_height: int = None,
     icon_dir: str = ".temp",
     icon_color: str = "#7b7568",
     icon_opacity: float = 1.0,
@@ -66,6 +68,12 @@ def gen_icon(
             export_dir=icon_dir,
         )
         icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+
+        icon_width = icon_width or icon_size
+        icon_height = icon_height or icon_size
+        if icon_width != icon_size or icon_height != icon_size:
+            icon_img = icon_img.resize((icon_width, icon_height))
+
     if icon_opacity < 1.0:
         icon_img = Image.blend(
             Image.new("RGBA", (icon_size, icon_size), (0, 0, 0, 0)),
@@ -103,17 +111,17 @@ def gen_icon(
         )
         icon_bg = Image.alpha_composite(icon_bg, noise_img)
 
-    left_offset = (bg_width - icon_size) // 2
+    left_offset = (bg_width - icon_width) // 2
     if align == "left":
         left_offset = 0
     if align == "right":
-        left_offset = bg_width - icon_size
+        left_offset = bg_width - icon_width
 
-    top_offset = (bg_height - icon_size) // 2
+    top_offset = (bg_height - icon_height) // 2
     if align == "top":
         top_offset = 0
     if align == "bottom":
-        top_offset = bg_height - icon_size
+        top_offset = bg_height - icon_height
 
     icon_bg.paste(icon_img, (left_offset, top_offset), icon_img)
     icon_bg.save("icon.png")
