@@ -76,7 +76,7 @@ def gen_icon(
 
     if icon_opacity < 1.0:
         icon_img = Image.blend(
-            Image.new("RGBA", (icon_size, icon_size), (0, 0, 0, 0)),
+            Image.new("RGBA", (icon_width, icon_height), (0, 0, 0, 0)),
             icon_img,
             icon_opacity,
         )
