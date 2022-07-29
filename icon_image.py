@@ -24,12 +24,15 @@ def gen_icon(
     seed: int = 42,
     pro_icon_path: str = None,
     pro_css_path: str = None,
+    inpaint: bool = False,
+    stroke: int = 0,
 ):
     """
     Generates a Font Awesome icon mask from the given FA prefix + name.
     """
 
     assert align in ["center", "left", "right", "top", "bottom"], "Invalid align value."
+    icon_size = icon_size + stroke
 
     if sketch_path:
         icon_img = Image.open(sketch_path).convert("RGBA")
@@ -124,6 +127,48 @@ def gen_icon(
         top_offset = bg_height - icon_height
 
     icon_bg.paste(icon_img, (left_offset, top_offset), icon_img)
+
+    if inpaint:
+        icon_size = icon_size - stroke
+        icon.export_icon(
+            icon=icon_name_raw[len(icon.common_prefix) :],
+            size=icon_size,
+            color=icon_color,
+            filename="icon.temp.png",
+            export_dir=icon_dir,
+        )
+        icon_img = Image.open(os.path.join(icon_dir, "icon.temp.png"))
+
+        icon_width = icon_width - stroke or icon_size
+        icon_height = icon_height - stroke or icon_size
+        if icon_width != icon_size or icon_height != icon_size:
+            icon_img = icon_img.resize((icon_width, icon_height))
+
+        icon_bg_temp = Image.new("RGBA", (bg_width, bg_height), (0, 0, 0, 0))
+
+        left_offset = (bg_width - icon_width) // 2
+        if align == "left":
+            left_offset = 0
+        if align == "right":
+            left_offset = bg_width - icon_width
+
+        top_offset = (bg_height - icon_height) // 2
+        if align == "top":
+            top_offset = 0
+        if align == "bottom":
+            top_offset = bg_height - icon_height
+
+        icon_bg_temp.paste(icon_img, (left_offset, top_offset), icon_img)
+        # Set alpha = 0 for the area corresponding to the icon
+
+        sketch_array = np.asarray(icon_bg_temp).T[3]
+        pixdata = icon_bg.load()
+        width, height = icon_bg.size
+        for y in range(height):
+            for x in range(width):
+                if sketch_array[x, y] > 0:
+                    pixdata[x, y] = (255, 255, 255, 0)
+
     icon_bg.save("icon.png")
 
 
